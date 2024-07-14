@@ -1,0 +1,86 @@
+import "./styles.css";
+import { useState } from "react";
+
+function Number({ value, click }) {
+  return (
+    <button className="square" onClick={click}>
+      {value}
+    </button>
+  );
+}
+function calc(square) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (square[a] && square[a] === square[b] && square[a] === square[c]) {
+      return square[a];
+    }
+  }
+  let cnt = 0;
+  for (let i = 0; i < square.length; i++) {
+    if (square[i]) {
+      cnt++;
+    }
+  }
+  if (cnt == square.length) return cnt;
+  else {
+    return null;
+  }
+}
+export default function Board() {
+  const [statechange, setstatechange] = useState(true);
+  const [square, setsquare] = useState(Array(9).fill(null));
+
+  function handle(i) {
+    if (square[i] || calc(square)) {
+      return;
+    }
+    let val;
+    if (statechange) {
+      val = "X";
+    } else {
+      val = "O";
+    }
+    const cpy = square.slice();
+    cpy[i] = val;
+    setsquare(cpy);
+    setstatechange(!statechange);
+  }
+  const winner = calc(square);
+  let status;
+  if (winner == square.length) {
+    status = "Draw";
+  } else if (winner) {
+    status = "Winner: " + winner;
+  }
+
+  return (
+    <>
+      <div className="ans">{status}</div>
+      <div className="board-row">
+        <Number value={square[0]} click={() => handle(0)} />
+        <Number value={square[1]} click={() => handle(1)} />
+        <Number value={square[2]} click={() => handle(2)} />
+      </div>
+      <div className="board-row">
+        <Number value={square[3]} click={() => handle(3)} />
+        <Number value={square[4]} click={() => handle(4)} />
+        <Number value={square[5]} click={() => handle(5)} />
+      </div>
+      <div className="board-row">
+        <Number value={square[6]} click={() => handle(6)} />
+        <Number value={square[7]} click={() => handle(7)} />
+        <Number value={square[8]} click={() => handle(8)} />
+      </div>
+    </>
+  );
+}

@@ -1,1 +1,1 @@
-This Repo contains the projects done during the start of  React  journey.
+This Repo contains Tic-Tac-Toe game and To-do-List using React.
